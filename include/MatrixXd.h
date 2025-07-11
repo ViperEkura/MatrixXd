@@ -1,37 +1,68 @@
 #ifndef MATRIX_XD_H
 #define MATRIX_XD_H
 
+#include <vector>
+
 template <typename T>
-struct MatrixResource
+class SegmentResource
 {
+private:
     T* m_data_ptr;
     int* m_data_ref_cnt;
-
-    MatrixResource() 
+public:
+    SegmentResource() 
         : m_data_ptr(nullptr), m_data_ref_cnt(nullptr){}
 
-    MatrixResource(T* data_ptr, int* data_ref_cnt) 
+    SegmentResource(T* data_ptr, int* data_ref_cnt) 
         : m_data_ptr(data_ptr), m_data_ref_cnt(data_ref_cnt){}
     
-    MatrixResource(int resource_size) 
+    SegmentResource(int resource_size) 
         : m_data_ptr(new T[resource_size]), m_data_ref_cnt(new int(1)){}
 
-    MatrixResource(const MatrixResource<T>& other);
+    SegmentResource(const SegmentResource<T>& other);
 
-    MatrixResource<T>& operator=(const MatrixResource<T>& other);
+    SegmentResource<T>& operator=(const SegmentResource<T>& other);
     
-    ~MatrixResource();
+    ~SegmentResource();
+
+    T* data() const { return m_data_ptr; }
+    int refCount() const { return m_data_ref_cnt ? *m_data_ref_cnt : 0; }
+
 };
 
 
-class MatrixBase
+template <typename T>
+class Array
 {
-    MatrixResource<float> m_resource;
-    MatrixBase(int size): m_resource(MatrixResource<float>(size)) {}
 
+private:
+    SegmentResource<T> m_data;
+    size_t m_size;
+public:
+    Array(size_t size)
+        : m_data(SegmentResource<T>(size)), m_size(size){}
+
+    Array(const Array<T>& other);
+    Array<T>& operator=(const Array<T>& other);
+    ~Array();
+
+    size_t size() const { return m_size; }
+    SegmentResource<T> data() const { return m_data; }
 };
 
 
+template <typename T>
+class View
+{
+    std::vector<int> m_shape;
+    std::vector<int> m_strides;
+    T* m_data;
 
+public:
+    static View<T> createView(Array<T> data, View<T> view)
+    {
+        
+    }
+};
 
 #endif
