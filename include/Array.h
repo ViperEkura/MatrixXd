@@ -45,8 +45,6 @@ public:
     
     Array(std::vector<T> vec);
 
-    template<typename... Args> Array(T first, Args... args);
-
     Array(const Array<T>& other);
     
     Array<T>& operator=(const Array<T>& other);

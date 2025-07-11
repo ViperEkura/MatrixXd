@@ -68,16 +68,6 @@ inline Array<T>::~Array(){
 
 template <typename T>
 template <typename... Args>
-inline Array<T>::Array(T first, Args... args)
-{
-    std::vector<T> vec = {first, args...};
-    m_size = vec.size();
-    m_data = SegmentResource<T>(vec.size());
-    for(int i = 0; i < vec.size(); ++i) m_data.m_data_ptr[i] = vec[i];
-}
-
-template <typename T>
-template <typename... Args>
 inline Array<T> Array<T>::makeArray(T first, Args... args)
 {
     std::vector<T> vec = {first, args...};
