@@ -8,7 +8,7 @@ class View
 {
     Array<size_t> m_shape;
 public:
-
+    template<typename... Args> View(T first, Args... args);
 };
 
 #endif
