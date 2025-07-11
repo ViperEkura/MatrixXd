@@ -3,6 +3,26 @@
 
 #include <vector>
 
+
+
+template <typename T> class SegmentResource;
+template <typename T> class Array;
+template <typename T> class View;
+
+template<typename T, typename... Args>
+std::vector<T> makeVector(T first, Args... args) 
+{
+    return {first, args...};
+}
+
+template<typename T, typename... Args>
+Array<T> makeArray(T first, Args... args) 
+{
+    std::vector<T> vec = makeVector(first, args...);
+    return Array<T>(vec);
+}
+
+
 template <typename T>
 class SegmentResource
 {
@@ -41,6 +61,8 @@ private:
 public:
     Array(size_t size)
         : m_data(SegmentResource<T>(size)), m_size(size){}
+    
+    Array(std::vector<T> vec);
 
     Array(const Array<T>& other);
     Array<T>& operator=(const Array<T>& other);
@@ -54,14 +76,10 @@ public:
 template <typename T>
 class View
 {
-    std::vector<int> m_shape;
-    std::vector<int> m_strides;
-    T* m_data;
-
 public:
     static View<T> createView(Array<T> data, View<T> view)
     {
-        
+
     }
 };
 
