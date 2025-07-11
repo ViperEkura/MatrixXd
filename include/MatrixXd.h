@@ -10,6 +10,8 @@ private:
 public:
     template<typename... Args> View(Args... args) 
         : m_shape(Array<size_t>::makeArray(args...)) {}
+    
+    size_t size() const;
 };
 
 template <typename T>
@@ -25,6 +27,19 @@ public:
     MatrixXd<T> view(View shape);
     template<typename... Args> MatrixXd<T> view(Args... args);
 };
+
+
+//View
+
+size_t View::size() const
+{
+    size_t size = m_shape[0];
+    for(size_t i = 1; i < m_shape.size(); ++i)
+    {
+        size *= m_shape[i];
+    }
+    return size;
+}
 
 
 

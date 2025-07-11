@@ -26,6 +26,9 @@ public:
     
     ~SegmentResource();
 
+    T& operator[](int index);
+    T operator[](int index) const;
+
     T* data() const { return m_data_ptr; }
     int refCount() const { return m_data_ref_cnt ? *m_data_ref_cnt : 0; }
 
@@ -40,6 +43,8 @@ private:
     SegmentResource<T> m_data;
     size_t m_size;
 public:
+    Array()
+        : m_data(), m_size(0) {}
     Array(size_t size)
         : m_data(SegmentResource<T>(size)), m_size(size){}
     
@@ -48,9 +53,13 @@ public:
     Array(const Array<T>& other);
     
     Array<T>& operator=(const Array<T>& other);
+    
+    T& operator[](int index);
+    
+    T operator[](int index) const;
 
     size_t size() const { return m_size; }
-    
+
     SegmentResource<T> data() const { return m_data; }
 
     template <typename... Args>
@@ -94,7 +103,16 @@ inline SegmentResource<T>::~SegmentResource(){
     }
 }
 
+template <typename T>
+inline T& SegmentResource<T>::operator[](int index)
+{
+    return m_data_ptr[index];
+}
 
+template <typename T>
+T SegmentResource<T>::operator[](int index) const {
+    return m_data_ptr[index];
+}
 
 // Array
 template <typename T>
@@ -120,6 +138,18 @@ inline Array<T> &Array<T>::operator=(const Array<T> &other)
     m_data = other.m_data;
     m_size = other.m_size;
     return *this;
+}
+
+template<class T> 
+T& Array<T>::operator[](int index)
+{
+    return m_data[index]; 
+}
+
+template<class T> 
+T Array<T>::operator[](int index) const
+{
+    return m_data[index]; 
 }
 
 template <typename T>

@@ -20,7 +20,11 @@ int main()
 
     std::cout << "Testing Array PASS\n";
 
+    View view = View(1, 2);
 
+    MatrixXd<double> mat = MatrixXd<double>(arr, view);
+
+    std::cout << "Testing MatrixXd PASS\n";
 
 
     std::cout << "=====END TESTING=====\n";
