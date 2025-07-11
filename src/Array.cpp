@@ -53,17 +53,11 @@ inline Array<T>::Array(const Array<T> &other)
     m_size = other.m_size;
 }
 
-template<class T> 
+template<typename T> 
 inline Array<T> &Array<T>::operator=(const Array<T> &other)
 {
     m_data = other.m_data;
     m_size = other.m_size;
-}
-
-
-template<class T> 
-inline Array<T>::~Array(){
-    // do nothing
 }
 
 template <typename T>
@@ -74,8 +68,7 @@ inline Array<T> Array<T>::makeArray(T first, Args... args)
     return Array<T>(vec);
 }
 
-
-template<class T>
+template<typename T>
 Array<T> Array<T>::slice(size_t start, size_t end) const 
 {
     assert(start < end && "Start index must be less than end index");
@@ -84,9 +77,8 @@ Array<T> Array<T>::slice(size_t start, size_t end) const
     size_t slice_size = end - start;
     Array<T> result(slice_size);
     
-    for (size_t i = 0; i < slice_size; ++i) {
+    for (size_t i = 0; i < slice_size; ++i) 
         result.m_data.m_data_ptr[i] = m_data.m_data_ptr[start + i];
-    }
 
     return result;
 }

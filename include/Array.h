@@ -48,8 +48,6 @@ public:
     Array(const Array<T>& other);
     
     Array<T>& operator=(const Array<T>& other);
-    
-    ~Array();
 
     size_t size() const { return m_size; }
     

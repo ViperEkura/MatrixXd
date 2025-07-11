@@ -18,10 +18,14 @@ private:
     Array<T> m_data;
     View m_shape;
 public:
-    MatrixXd();
+    MatrixXd(Array<T> data);
     MatrixXd(Array<T> data, View shape);
-    ~MatrixXd();
+
+    MatrixXd<T> view(View shape);
+    template<typename... Args> MatrixXd<T> view(Args... args);
 };
 
 
 #endif
+
+
