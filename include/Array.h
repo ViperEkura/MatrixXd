@@ -58,6 +58,9 @@ public:
     SegmentResource<T> data() const { return m_data; }
 
     template<typename... Args> static Array<T> makeArray(T first, Args... args);
+
+    Array<T> slice(size_t start, size_t end) const;
+    
 };
 
 
