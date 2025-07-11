@@ -1,8 +1,10 @@
-#ifndef MATRIXXD_CPP
-#define MATRIXXD_CPP
+#ifndef ARRAY_CPP
+#define ARRAY_CPP
 
-#include "MatrixXd.h"
+#include "Array.h"
 
+
+// SegmentResource
 
 template<typename T> 
 SegmentResource<T>::SegmentResource(const SegmentResource<T>& other)
@@ -34,15 +36,25 @@ SegmentResource<T>::~SegmentResource(){
 }
 
 
+
+// Array
 template <typename T>
-inline Array<T>::Array(const Array<T> &other){
+Array<T>::Array(std::vector<T> vec)
+{
+    m_size = vec.size();
+    m_data = SegmentResource<T>(vec.size());
+    for(int i = 0; i < vec.size(); ++i) m_data.m_data_ptr[i] = vec[i];
+}
+
+template <typename T>
+inline Array<T>::Array(const Array<T> &other)
+{
     m_data = other.m_data;
     m_size = other.m_size;
 }
 
-
 template<class T> 
-Array<T> &Array<T>::operator=(const Array<T> &other)
+inline Array<T> &Array<T>::operator=(const Array<T> &other)
 {
     m_data = other.m_data;
     m_size = other.m_size;
@@ -54,7 +66,23 @@ Array<T>::~Array(){
     // do nothing
 }
 
+template <typename T>
+template <typename... Args>
+Array<T>::Array(T first, Args... args)
+{
+    std::vector<T> vec = {first, args...};
+    m_size = vec.size();
+    m_data = SegmentResource<T>(vec.size());
+    for(int i = 0; i < vec.size(); ++i) m_data.m_data_ptr[i] = vec[i];
+}
 
+template <typename T>
+template <typename... Args>
+inline Array<T> Array<T>::makeArray(T first, Args... args)
+{
+    std::vector<T> vec = {first, args...};
+    return Array<T>(vec);
+}
 
 #endif
 

@@ -1,26 +1,7 @@
-#ifndef MATRIX_XD_H
-#define MATRIX_XD_H
+#ifndef ARRAY_H
+#define ARRAY_H
 
 #include <vector>
-
-
-
-template <typename T> class SegmentResource;
-template <typename T> class Array;
-template <typename T> class View;
-
-template<typename T, typename... Args>
-std::vector<T> makeVector(T first, Args... args) 
-{
-    return {first, args...};
-}
-
-template<typename T, typename... Args>
-Array<T> makeArray(T first, Args... args) 
-{
-    std::vector<T> vec = makeVector(first, args...);
-    return Array<T>(vec);
-}
 
 
 template <typename T>
@@ -64,23 +45,21 @@ public:
     
     Array(std::vector<T> vec);
 
+    template<typename... Args> Array(T first, Args... args);
+
     Array(const Array<T>& other);
+    
     Array<T>& operator=(const Array<T>& other);
+    
     ~Array();
 
     size_t size() const { return m_size; }
+    
     SegmentResource<T> data() const { return m_data; }
+
+    template<typename... Args> static Array<T> makeArray(T first, Args... args);
 };
 
-
-template <typename T>
-class View
-{
-public:
-    static View<T> createView(Array<T> data, View<T> view)
-    {
-
-    }
-};
 
 #endif
+
