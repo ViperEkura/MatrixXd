@@ -11,10 +11,12 @@ void WAXMY(Tp* x, Tp* y, Tp* z, int size, Tp alpha);
 template<typename Tp>
 Tp DDOT(Tp* x, Tp* y, Tp* z, int size);
 
+template<typename Tp>
+void WAXDY(Tp* x, Tp* y, Tp* z, int size, Tp alpha, Tp eps);
+
 
 
 // Operator
-
 template<typename Tp>
 void WAXPBY(Tp* x, Tp* y, Tp* z, int size, Tp alpha, Tp beta)
 {
@@ -27,6 +29,13 @@ void WAXMY(Tp* x, Tp* y, Tp* z, int size, Tp alpha)
 {
     for (int i = 0; i < size; ++i)
         z[i] = alpha * x[i] * y[i];
+}
+
+template<typename Tp>
+void WAXDY(Tp* x, Tp* y, Tp* z, int size, Tp alpha, Tp eps)
+{
+    for (int i = 0; i < size; ++i)
+        z[i] = alpha * x[i] / (y[i] + eps);
 }
 
 template<typename Tp>
