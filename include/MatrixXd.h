@@ -8,9 +8,13 @@ class View{
 private:
     Array<int> m_shape;
 public:
-    template<typename... Args> View(Args... args) 
-        : m_shape(Array<int>::makeArray(args...)) {}
-    
+    template<typename... Args> 
+    View(Args... args);
+
+    View(const View& other);
+
+    View& operator=(const View& other);
+
     int size() const;
 };
 
@@ -32,6 +36,22 @@ public:
 
 
 //View
+template <typename... Args>
+inline View::View(Args... args)
+{
+    m_shape = Array<int>::makeArray(args...);
+}
+
+inline View::View(const View &other)
+{
+    m_shape = other.m_shape;
+}
+
+ inline View& View::operator=(const View &other)
+{
+    m_shape = other.m_shape;
+    return *this;
+}
 
 int View::size() const
 {

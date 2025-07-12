@@ -27,9 +27,11 @@ public:
     ~SegmentResource();
 
     T& operator[](int index);
+
     T operator[](int index) const;
 
     T* data() const { return m_data_ptr; }
+
     int refCount() const { return m_data_ref_cnt ? *m_data_ref_cnt : 0; }
 
 };
@@ -50,6 +52,8 @@ public:
     
     Array(std::vector<T> vec);
 
+    Array(std::initializer_list<T> list);
+
     Array(const Array<T>& other);
     
     Array<T>& operator=(const Array<T>& other);
@@ -60,7 +64,11 @@ public:
 
     int size() const { return m_size; }
 
-    SegmentResource<T> data() const { return m_data; }
+    T* data() const { return m_data.data(); }
+
+    T* begin() const {return m_data.data();}
+
+    T* end() const {return m_data.data() + m_size;}
 
     template <typename... Args>
     static Array<T> makeArray(Args... args);
@@ -120,9 +128,15 @@ inline Array<T>::Array(std::vector<T> vec)
 {
     m_size = vec.size();
     m_data = SegmentResource<T>(vec.size());
-    T* ptr = m_data.data();
+    std::copy(vec.begin(), vec.end(), m_data.data());
+}
 
-    for (size_t i = 0; i < vec.size(); ++i) ptr[i] = vec[i];
+template<typename T> 
+inline Array<T>::Array(std::initializer_list<T> list) 
+{
+    m_size = list.size();
+    m_data = SegmentResource<T>(m_size);
+    std::copy(list.begin(), list.end(), m_data.data());
 }
 
 template <typename T>
@@ -156,8 +170,7 @@ template <typename T>
 template <typename... Args>
 Array<T> Array<T>::makeArray(Args... args)
 {
-    std::vector<T> vec{static_cast<T>(args)...};
-    return Array<T>(vec);
+    return Array<T>{static_cast<T>(args)...};
 }
 
 template<typename T>
@@ -168,12 +181,7 @@ Array<T> Array<T>::slice(int start, int end) const
 
     int slice_size = end - start;
     Array<T> result(slice_size);
-    
-    T* ptr = m_data.data();
-    T* result_ptr = result.m_data.data();
-
-    for (int i = 0; i < slice_size; ++i) 
-        result_ptr[i] = ptr[start + i];
+    std::copy(this->begin(), this->end(), result.data());
 
     return result;
 }
