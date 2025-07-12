@@ -41,10 +41,10 @@ public:
 template <typename T>
 class Array
 {
-
 private:
     SegmentResource<T> m_data;
     int m_size;
+
 public:
     Array()
         : m_data(), m_size(0) {}
@@ -83,9 +83,7 @@ public:
     static Array<T> makeArray(Args... args);
 
     Array<T> slice(int start, int end) const;
-    
 };
-
 
 // SegmentResource
 
@@ -223,7 +221,7 @@ Array<T> Array<T>::slice(int start, int end) const
 
     int slice_size = end - start;
     Array<T> result(slice_size);
-    std::copy(this->begin(), this->end(), result.data());
+    std::copy(this->begin() + start, this->begin() + end, result.data());
 
     return result;
 }

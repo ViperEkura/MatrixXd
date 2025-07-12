@@ -4,9 +4,10 @@
 #include "Array.h"
 
 
-class View{
+class View {
 private:
     Array<int> m_shape;
+
 public:
     template<typename... Args> 
     View(Args... args);
@@ -16,6 +17,10 @@ public:
     View& operator=(const View& other);
 
     int size() const;
+    int ndim() const { return m_shape.size(); } 
+    int dim(int i) const { return m_shape[i]; }
+
+    static View broadcastShape(const View& a, const View& b); 
 };
 
 template <typename T>
@@ -77,7 +82,18 @@ int View::size() const
     return size;
 }
 
-
+inline View View::broadcastShape(const View& a, const View& b)
+{
+    int ndim = std::max(a.ndim(), b.ndim());
+    std::vector<int> result_shape;
+    for (int i = 0; i < ndim; ++i) {
+        int dim_a = (i < a.ndim()) ? a.dim(i) : 1;
+        int dim_b = (i < b.ndim()) ? b.dim(i) : 1;
+        assert(dim_a == dim_b || dim_a == 1 || dim_b == 1);
+        result_shape.push_back(std::max(dim_a, dim_b));
+    }
+    return View(result_shape.data(), result_shape.size());
+}
 
 // MatrixXd
 
@@ -125,36 +141,33 @@ inline MatrixXd<T> MatrixXd<T>::view(Args... args)
 template<class T> 
 MatrixXd<T> MatrixXd<T>::operator+(const MatrixXd<T> &other)
 {
-    assert(m_shape.size() == other.m_shape.size() && "Matrix size must match");
+    View target_shape = View::broadcastShape(m_shape, other.m_shape);
     Array<T> result_data = m_data + other.m_data;
-    return MatrixXd<T>(result_data, m_shape);
+    return MatrixXd<T>(result_data, target_shape);
 }
-
 
 template<class T> 
 MatrixXd<T> MatrixXd<T>::operator-(const MatrixXd<T> &other)
 {
-    assert(m_shape.size() == other.m_shape.size() && "Matrix size must match");
+    View target_shape = View::broadcastShape(m_shape, other.m_shape); 
     Array<T> result_data = m_data - other.m_data;
-    return MatrixXd<T>(result_data, m_shape);
+    return MatrixXd<T>(result_data, target_shape);
 }
-
 
 template<class T> 
 MatrixXd<T> MatrixXd<T>::operator*(const MatrixXd<T> &other)
 {
-    assert(m_shape.size() == other.m_shape.size() && "Matrix size must match");
+    View target_shape = View::broadcastShape(m_shape, other.m_shape);
     Array<T> result_data = m_data * other.m_data;
-    return MatrixXd<T>(result_data, m_shape);
+    return MatrixXd<T>(result_data, target_shape);
 }
-
 
 template<class T> 
 MatrixXd<T> MatrixXd<T>::operator/(const MatrixXd<T> &other)
 {
-    assert(m_shape.size() == other.m_shape.size() && "Matrix size must match");
+    View target_shape = View::broadcastShape(m_shape, other.m_shape);
     Array<T> result_data = m_data / other.m_data;
-    return MatrixXd<T>(result_data, m_shape);
+    return MatrixXd<T>(result_data, target_shape);
 }
 
 #endif
