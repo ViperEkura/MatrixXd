@@ -47,7 +47,6 @@ public:
 
     MatrixXd<T> operator/(const MatrixXd<T>& other);
 
-    
 };
 
 
@@ -122,6 +121,40 @@ inline MatrixXd<T> MatrixXd<T>::view(Args... args)
     return MatrixXd(m_data, m_shape);
 }
 
+
+template<class T> 
+MatrixXd<T> MatrixXd<T>::operator+(const MatrixXd<T> &other)
+{
+    assert(m_shape.size() == other.m_shape.size() && "Matrix size must match");
+    Array<T> result_data = m_data + other.m_data;
+    return MatrixXd<T>(result_data, m_shape);
+}
+
+
+template<class T> 
+MatrixXd<T> MatrixXd<T>::operator-(const MatrixXd<T> &other)
+{
+    assert(m_shape.size() == other.m_shape.size() && "Matrix size must match");
+    Array<T> result_data = m_data - other.m_data;
+    return MatrixXd<T>(result_data, m_shape);
+}
+
+
+template<class T> 
+MatrixXd<T> MatrixXd<T>::operator*(const MatrixXd<T> &other)
+{
+    assert(m_shape.size() == other.m_shape.size() && "Matrix size must match");
+    Array<T> result_data = m_data * other.m_data;
+    return MatrixXd<T>(result_data, m_shape);
+}
+
+
+template<class T> 
+MatrixXd<T> MatrixXd<T>::operator/(const MatrixXd<T> &other)
+{
+    assert(m_shape.size() == other.m_shape.size() && "Matrix size must match");
+    Array<T> result_data = m_data / other.m_data;
+    return MatrixXd<T>(result_data, m_shape);
+}
+
 #endif
-
-
