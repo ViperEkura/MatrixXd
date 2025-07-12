@@ -19,11 +19,10 @@ int main()
     assert(arr.size() == 2);
 
     std::cout << "Testing Array PASS\n";
-
-    View view = View(1, 2);
-
-    MatrixXd<double> mat = MatrixXd<double>(arr, view);
-
+    MatrixXd<double> mat = MatrixXd<double>(arr, View(1, 2));
+    MatrixXd<double> mat2 = MatrixXd<double>(5, 5);
+    assert(mat.size() == 2);
+    assert(mat2.size() == 25);
     std::cout << "Testing MatrixXd PASS\n";
 
 

@@ -41,11 +41,11 @@ class Array
 
 private:
     SegmentResource<T> m_data;
-    size_t m_size;
+    int m_size;
 public:
     Array()
         : m_data(), m_size(0) {}
-    Array(size_t size)
+    Array(int size)
         : m_data(SegmentResource<T>(size)), m_size(size){}
     
     Array(std::vector<T> vec);
@@ -58,14 +58,14 @@ public:
     
     T operator[](int index) const;
 
-    size_t size() const { return m_size; }
+    int size() const { return m_size; }
 
     SegmentResource<T> data() const { return m_data; }
 
     template <typename... Args>
     static Array<T> makeArray(Args... args);
 
-    Array<T> slice(size_t start, size_t end) const;
+    Array<T> slice(int start, int end) const;
     
 };
 
@@ -161,18 +161,18 @@ Array<T> Array<T>::makeArray(Args... args)
 }
 
 template<typename T>
-Array<T> Array<T>::slice(size_t start, size_t end) const 
+Array<T> Array<T>::slice(int start, int end) const 
 {
     assert(start < end && "Start index must be less than end index");
     assert(start >= 0 && end <= m_size && "Indices out of range");
 
-    size_t slice_size = end - start;
+    int slice_size = end - start;
     Array<T> result(slice_size);
     
     T* ptr = m_data.data();
     T* result_ptr = result.m_data.data();
 
-    for (size_t i = 0; i < slice_size; ++i) 
+    for (int i = 0; i < slice_size; ++i) 
         result_ptr[i] = ptr[start + i];
 
     return result;

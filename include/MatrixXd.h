@@ -6,12 +6,12 @@
 
 class View{
 private:
-    Array<size_t> m_shape;
+    Array<int> m_shape;
 public:
     template<typename... Args> View(Args... args) 
-        : m_shape(Array<size_t>::makeArray(args...)) {}
+        : m_shape(Array<int>::makeArray(args...)) {}
     
-    size_t size() const;
+    int size() const;
 };
 
 template <typename T>
@@ -23,7 +23,9 @@ private:
 public:
     MatrixXd(Array<T> data);
     MatrixXd(Array<T> data, View shape);
+    template<typename... Args> MatrixXd(Args... args);
 
+    int size() const { return m_shape.size(); }
     MatrixXd<T> view(View shape);
     template<typename... Args> MatrixXd<T> view(Args... args);
 };
@@ -31,13 +33,12 @@ public:
 
 //View
 
-size_t View::size() const
+int View::size() const
 {
-    size_t size = m_shape[0];
-    for(size_t i = 1; i < m_shape.size(); ++i)
-    {
+    int size = m_shape[0];
+    for(int i = 1; i < m_shape.size(); ++i)
         size *= m_shape[i];
-    }
+
     return size;
 }
 
@@ -49,6 +50,7 @@ template<typename T>
 MatrixXd<T>::MatrixXd(Array<T> data)
 {
     m_data = data;
+    m_shape = View(data.size());
 }
 
 template<typename T> 
@@ -57,6 +59,16 @@ MatrixXd<T>::MatrixXd(Array<T> data, View shape)
     m_data = data;
     m_shape = shape;
 }
+
+
+template<class T> 
+template<class... Args> 
+MatrixXd<T>::MatrixXd(Args ...args)
+{
+    m_shape = View(args...);
+    m_data = Array<T>(m_shape.size());
+}
+
 
 template <typename T>
 MatrixXd<T> MatrixXd<T>::view(View shape)
