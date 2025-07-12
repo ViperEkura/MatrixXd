@@ -201,6 +201,14 @@ Array<T> Array<T>::operator*(const Array<T> &other) const
 }
 
 template <typename T>
+inline Array<T> Array<T>::operator/(const Array<T> &other) const
+{
+    assert(m_size == other.m_size && "Array size mismatch");
+    Array<T> result(m_size);
+    WAXDY(m_data.data(), other.m_data.data(), result.m_data.data(), m_size, 1.0, 0);
+}
+
+template <typename T>
 template <typename... Args>
 Array<T> Array<T>::makeArray(Args... args)
 {
