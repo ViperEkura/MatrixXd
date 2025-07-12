@@ -12,6 +12,8 @@ public:
     template<typename... Args> 
     View(Args... args);
 
+    View(Array<int> shape);
+
     View(const View& other);
 
     View& operator=(const View& other);
@@ -62,6 +64,11 @@ inline View::View(Args... args)
     m_shape = Array<int>::makeArray(args...);
 }
 
+inline View::View(Array<int> shape)
+{
+    m_shape = shape;
+}
+
 inline View::View(const View &other)
 {
     m_shape = other.m_shape;
@@ -85,14 +92,15 @@ int View::size() const
 inline View View::broadcastShape(const View& a, const View& b)
 {
     int ndim = std::max(a.ndim(), b.ndim());
-    std::vector<int> result_shape;
+    Array<int> result_shape;
+
     for (int i = 0; i < ndim; ++i) {
         int dim_a = (i < a.ndim()) ? a.dim(i) : 1;
         int dim_b = (i < b.ndim()) ? b.dim(i) : 1;
         assert(dim_a == dim_b || dim_a == 1 || dim_b == 1);
-        result_shape.push_back(std::max(dim_a, dim_b));
+        result_shape[i] = std::max(dim_a, dim_b);
     }
-    return View(result_shape.data(), result_shape.size());
+    return View(result_shape);
 }
 
 // MatrixXd
