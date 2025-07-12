@@ -26,12 +26,28 @@ private:
     View m_shape;
 public:
     MatrixXd(Array<T> data);
+
     MatrixXd(Array<T> data, View shape);
-    template<typename... Args> MatrixXd(Args... args);
+
+    template<typename... Args> 
+    MatrixXd(Args... args);
 
     int size() const { return m_shape.size(); }
+
     MatrixXd<T> view(View shape);
-    template<typename... Args> MatrixXd<T> view(Args... args);
+    
+    template<typename... Args> 
+    MatrixXd<T> view(Args... args);
+
+    MatrixXd<T> operator+(const MatrixXd<T>& other);
+
+    MatrixXd<T> operator-(const MatrixXd<T>& other);
+
+    MatrixXd<T> operator*(const MatrixXd<T>& other);
+
+    MatrixXd<T> operator/(const MatrixXd<T>& other);
+
+    
 };
 
 

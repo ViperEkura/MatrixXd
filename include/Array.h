@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <cassert>
+#include "Operator.h"
 
 template <typename T>
 class SegmentResource
@@ -61,6 +62,14 @@ public:
     T& operator[](int index);
     
     T operator[](int index) const;
+
+    Array<T> operator+(const Array<T>& other) const;
+
+    Array<T> operator-(const Array<T>& other) const;
+    
+    Array<T> operator*(const Array<T>& other) const;
+
+    Array<T> operator/(const Array<T>& other) const;
 
     int size() const { return m_size; }
 
@@ -164,6 +173,31 @@ template<class T>
 T Array<T>::operator[](int index) const
 {
     return m_data[index]; 
+}
+
+template<class T> 
+Array<T> Array<T>::operator+(const Array<T> &other) const
+{
+    assert(m_size == other.m_size && "Array size mismatch");
+    Array<T> result(m_size);
+    WAXPBY(m_data.data(), other.m_data.data(), result.m_data.data(), m_size, 1.0, 1.0);
+}
+
+
+template<class T> 
+Array<T> Array<T>::operator-(const Array<T> &other) const
+{
+    assert(m_size == other.m_size && "Array size mismatch");
+    Array<T> result(m_size);
+    WAXPBY(m_data.data(), other.m_data.data(), result.m_data.data(), m_size, 1.0, -1.0);
+}
+
+template<class T> 
+Array<T> Array<T>::operator*(const Array<T> &other) const
+{
+    assert(m_size == other.m_size && "Array size mismatch");
+    Array<T> result(m_size);
+    WAXMY(m_data.data(), other.m_data.data(), result.m_data.data(), m_size, 1.0);
 }
 
 template <typename T>
