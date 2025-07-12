@@ -7,7 +7,7 @@
 class View {
 private:
     Array<int> m_shape;
-
+    Array<bool> m_is_broadcasted;
 public:
     template<typename... Args> 
     View(Args... args);

@@ -164,13 +164,15 @@ inline Array<T> &Array<T>::operator=(const Array<T> &other)
 template<class T> 
 T& Array<T>::operator[](int index)
 {
-    return m_data[index]; 
+    assert(index >= -m_size && index < m_size && "Index out of range");
+    return m_data[(index + m_size) % m_size]; 
 }
 
 template<class T> 
 T Array<T>::operator[](int index) const
 {
-    return m_data[index]; 
+    assert(index >= -m_size && index < m_size && "Index out of range");
+    return m_data[(index + m_size) % m_size]; 
 }
 
 template<class T> 

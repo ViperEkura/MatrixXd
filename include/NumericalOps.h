@@ -1,5 +1,5 @@
-#ifndef OPERATOR_H
-#define OPERATOR_H
+#ifndef NUMERICAL_OPS_H
+#define NUMERICAL_OPS_H
 
 
 template<typename Tp>
