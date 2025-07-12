@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <cassert>
-#include "Operator.h"
+#include "NumericalOps.h"
 
 template <typename T>
 class SegmentResource
