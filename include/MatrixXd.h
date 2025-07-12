@@ -14,6 +14,8 @@ public:
 
     View(Array<int> shape);
 
+    View(Array<int> shape, Array<bool> is_broadcasted);
+
     View(const View& other);
 
     View& operator=(const View& other);
@@ -62,29 +64,39 @@ template <typename... Args>
 inline View::View(Args... args)
 {
     m_shape = Array<int>::makeArray(args...);
+    m_is_broadcasted = Array<bool>(m_shape.size());
 }
 
 inline View::View(Array<int> shape)
 {
     m_shape = shape;
+    m_is_broadcasted = Array<bool>(m_shape.size());
+}
+
+inline View::View(Array<int> shape, Array<bool> is_broadcasted)
+{
+    m_shape = shape;
+    m_is_broadcasted = is_broadcasted;
 }
 
 inline View::View(const View &other)
 {
     m_shape = other.m_shape;
+    m_is_broadcasted = other.m_is_broadcasted;
 }
 
  inline View& View::operator=(const View &other)
 {
     m_shape = other.m_shape;
+    m_is_broadcasted = other.m_is_broadcasted;
     return *this;
 }
 
 int View::size() const
 {
-    int size = m_shape[0];
-    for(int i = 1; i < m_shape.size(); ++i)
-        size *= m_shape[i];
+    int size = 1;
+    for(int i = 0; i < m_shape.size(); ++i)
+        if(!m_is_broadcasted[i]) size *= m_shape[i];
 
     return size;
 }
@@ -92,13 +104,17 @@ int View::size() const
 inline View View::broadcastShape(const View& a, const View& b)
 {
     int ndim = std::max(a.ndim(), b.ndim());
-    Array<int> result_shape;
+    Array<int> result_shape(ndim);
+    Array<bool> is_broadcasted(ndim);
 
     for (int i = 0; i < ndim; ++i) {
         int dim_a = (i < a.ndim()) ? a.dim(i) : 1;
         int dim_b = (i < b.ndim()) ? b.dim(i) : 1;
         assert(dim_a == dim_b || dim_a == 1 || dim_b == 1);
         result_shape[i] = std::max(dim_a, dim_b);
+        
+        if (dim_a != dim_b) is_broadcasted[i] = true;
+        else is_broadcasted[i] = false;
     }
     return View(result_shape);
 }
